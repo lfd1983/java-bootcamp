@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bootcamp.shoppingcart.entity.Category;
+import com.bootcamp.shoppingcart.exceptions.CategoryDoesNotExistException;
 import com.bootcamp.shoppingcart.repository.CategoryRepository;
 
 /**
@@ -46,50 +47,46 @@ public class CategoryController {
 	     }
 	  
 	  
-	  /**
-	   * Delete the time slot having the passed id.
-	   * 
-	   * @param id the id of the time slot to delete
-	   * @return a string describing if the time slot is succesfully deleted or not.
-	   */
+	  //delete a category
 	  @RequestMapping( value = "{id}", method = RequestMethod.DELETE )
 	  @ResponseStatus( HttpStatus.OK )
-	   public void delete(@PathVariable long id) {
+	   public void delete(@PathVariable long id) throws CategoryDoesNotExistException {
 	   
-		  Category category = new Category(id);
+		  Category category = categoryRepository.findById(id);
+		  if(category == null){
+	    	  throw new CategoryDoesNotExistException(id);
+	      }
 	      categoryRepository.delete(category); 
 	  
 	  }
 	  
 	    
-	  /**
-	   * Update the name and the description for the timeslot in the database having the
-	   * passed id.
-	   * The data to update is passed in Json format
-	   *  
-	   */
+	  //update a category
 	  @RequestMapping( value = "{id}", method = RequestMethod.PUT)
 	  @ResponseStatus( HttpStatus.CREATED )
-	   public void update(@PathVariable long id, @RequestBody Category category) {
+	   public void update(@PathVariable long id, @RequestBody Category category) throws CategoryDoesNotExistException {
 	    
-	      Category category2 = categoryRepository.findOne(id);
+	      Category category2 = categoryRepository.findById(id);
 	      if(category2 == null){
-	    	  throw new IllegalStateException("No Category with id: " + id);
+	    	  throw new CategoryDoesNotExistException(id);
 	      }
 	      category.setId(category2.getId());
-	      
 	      categoryRepository.save(category);
 	      }
 	  
+	  //get a category
 	  @RequestMapping(value ="{id}",method = RequestMethod.GET)
-	   public Category getRoomsById(@PathVariable long id) {
+	   public Category getCategoryById(@PathVariable long id) throws CategoryDoesNotExistException {
 		  Category category = categoryRepository.findById(id);
+		  if(category == null){
+	    	  throw new CategoryDoesNotExistException(id);
+	      }
 	      return category;
 	  }
 	
 	  
 	  @RequestMapping(method = RequestMethod.GET)
-	   public List<Category> getRooms() {
+	   public List<Category> getCategories() {
 		  List<Category> category = categoryRepository.findAll();
 	      return category;
 	  }

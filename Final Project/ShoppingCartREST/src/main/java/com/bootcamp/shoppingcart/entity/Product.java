@@ -45,19 +45,10 @@ public class Product {
 		@JoinColumn(name="product_id", referencedColumnName="id")
 		private List<ProductLine> productLine;
 		
-		/*@ManyToOne(cascade = CascadeType.ALL)
-		@JoinColumn(name = "category_id")*/
-		private int category_id;
-		/*private Category category;
-		public Category getCategory() {
-			return category;
-		}
-	
-	
-		public void setCategory(Category category) {
-			this.category = category;
-		}
-	*/
+		@Column(name = "category_id")
+		@NotNull
+		private int categoryId;
+		
 		public Product() {
 		}
 	
@@ -72,7 +63,7 @@ public class Product {
 			this.description = description;
 			this.price = price;
 			this.quantity = quantity;
-			this.category_id = category_id;
+			this.categoryId = category_id;
 		}
 	
 	
@@ -124,7 +115,7 @@ public class Product {
 		public void setQuantity(double quantity) {
 			this.quantity = quantity;
 		}
-
+/*
 		public int getCategory_id() {
 			return category_id;
 		}
@@ -133,7 +124,15 @@ public class Product {
 			this.category_id = category_id;
 		}
 	
-	
+	*/
+
+		public int getCategoryId() {
+			return categoryId;
+		}
+
+		public void setCategoryId(int categoryId) {
+			this.categoryId = categoryId;
+		}
 		
 		
 		

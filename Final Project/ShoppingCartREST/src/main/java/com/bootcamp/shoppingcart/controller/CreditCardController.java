@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bootcamp.shoppingcart.entity.CreditCard;
+import com.bootcamp.shoppingcart.exceptions.CreditCardDoesNotExistException;
 import com.bootcamp.shoppingcart.repository.CreditCardRepository;
 
 /**
@@ -31,12 +32,19 @@ public class CreditCardController {
 	 
 	  //Get Credit Card By Id
 	  @RequestMapping(value = "{idcc}", method = RequestMethod.GET)
-	  public CreditCard findByUserId(@PathVariable long idcc) {
-	   return creditCardRepository.findOne(idcc);
+	  public CreditCard findByUserId(@PathVariable long idcc) throws CreditCardDoesNotExistException {
+		  CreditCard creditCard = creditCardRepository.findById(idcc);
+		  if(creditCard == null){
+	    	  throw new CreditCardDoesNotExistException(idcc);
+	      }
+		  
+	   return creditCard;
 	  }
 	  
 	  
-	 //add a credit card to the user passing its
+	  
+	  
+	 //add a credit card to the user
 	  
 	  @RequestMapping(method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE  )
 	  @ResponseStatus( HttpStatus.CREATED )
@@ -45,17 +53,14 @@ public class CreditCardController {
 	     }
 	  
 	  
-	  /**
-	   * Update the user´s credit card
-	   *  
-	   */
+	 //update a credit card
 	  @RequestMapping( value = "{idcc}", method = RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE )
 	  @ResponseStatus( HttpStatus.CREATED )
-	   public void updateCreditCard(@PathVariable long id, @RequestBody CreditCard creditCard) {
+	   public void updateCreditCard(@PathVariable long idcc, @RequestBody CreditCard creditCard) throws CreditCardDoesNotExistException {
 	    
-	      CreditCard creditCard2 = creditCardRepository.findOne(id);
+	      CreditCard creditCard2 = creditCardRepository.findById(idcc);
 	      if(creditCard2 == null){
-	    	  throw new IllegalStateException("No CreditCard with id: " + id);
+	    	  throw new CreditCardDoesNotExistException(idcc);
 	      }
 	      creditCard.setId(creditCard2.getId());
 	      creditCardRepository.save(creditCard);
@@ -65,9 +70,12 @@ public class CreditCardController {
 	  //delete credit card
 	  @RequestMapping( value = "{idcc}", method = RequestMethod.DELETE )
 	  @ResponseStatus( HttpStatus.OK )
-	   public void deleteCreditCard(@PathVariable long idcc) {
+	   public void deleteCreditCard(@PathVariable long idcc) throws CreditCardDoesNotExistException {
 	   
-		  CreditCard creditCard = new CreditCard(idcc);
+		  CreditCard creditCard = creditCardRepository.findById(idcc);
+		  if(creditCard == null){
+	    	  throw new CreditCardDoesNotExistException(idcc);
+	      }
 		  creditCardRepository.delete(creditCard); 
 	  
 	  }

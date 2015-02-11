@@ -5,8 +5,6 @@ package com.bootcamp.shoppingcart.controller;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,11 +36,7 @@ public class ShoppingCartController {
 	   public void create(@PathVariable String id, @RequestBody ShoppingCart shoppingCart) throws IOException {
 		  shoppingCartRepository.save(shoppingCart);
 		  
-		 /* HttpServletResponse response = null;
-		  response.setStatus(HttpServletResponse.SC_CREATED);
-		  response.setHeader("Location", id+"/cart/"+shoppingCart.getId().toString());
-		  System.out.println(response.toString());*/
-	     }
+		  }
 	 
 	 
 	 //get a shoppingcart with the passed id

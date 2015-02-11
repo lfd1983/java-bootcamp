@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bootcamp.shoppingcart.entity.CreditCard;
 import com.bootcamp.shoppingcart.entity.User;
+import com.bootcamp.shoppingcart.exceptions.UserDoesNotExistException;
 import com.bootcamp.shoppingcart.repository.UserRepository;
 
 /**
@@ -30,11 +31,8 @@ public class UserController {
 	  
 	  @Autowired
 	  private UserRepository userRepository;
-	  /**
-	   * Create a user and save it in the database.
-	   * 
-	   * 
-	   */
+	
+	  //add a new user
 	  @RequestMapping( method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE )
 	  @ResponseStatus( HttpStatus.CREATED )
 	   public void create(@RequestBody User user) {
@@ -42,31 +40,27 @@ public class UserController {
 	     }
 	  
 	  
-	  /**
-	   * Delete the user the passed id.
-	   * 
-	   */
+	  //Delete user
 	  @RequestMapping( value = "{id}", method = RequestMethod.DELETE )
 	  @ResponseStatus( HttpStatus.OK )
-	   public void delete(@PathVariable long id) {
-	   
-		  User user = new User(id);
+	   public void delete(@PathVariable long id) throws UserDoesNotExistException {
+	  
+		  User user = userRepository.findOne(id);
+		  if (user == null) {
+		   throw new UserDoesNotExistException(id);
+		  }
 		  userRepository.delete(user); 
-	  
-	  }
-	  
+		 }
+		  
 	    
-	  /**
-	   * Update the user
-	   *  
-	   */
+	  //update user
 	  @RequestMapping( value = "{id}", method = RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE)
 	  @ResponseStatus( HttpStatus.CREATED )
-	   public void update(@PathVariable long id, @RequestBody User user) {
+	   public void update(@PathVariable long id, @RequestBody User user) throws UserDoesNotExistException {
 	    
 	      User user2 = userRepository.findOne(id);
 	      if(user2 == null){
-	    	  throw new IllegalStateException("No User with id: " + id);
+	    	  throw new UserDoesNotExistException(id);
 	      }
 	      user.setId(user2.getId());
 	      
@@ -75,15 +69,16 @@ public class UserController {
 	  
 	  /**
 	   * get the user passing its Id
+	 * @throws UserDoesNotExistException 
 	   *  
 	   */
 	  
 	  @RequestMapping(value ="{id}",method = RequestMethod.GET)
-	   public User getUserById(@PathVariable long id) {
+	   public User getUserById(@PathVariable long id) throws UserDoesNotExistException {
 		  User user = userRepository.findById(id);
 		  		  	      
 	      if(user == null){
-	    	  throw new IllegalStateException("No user with id: " + id);
+	    	  throw new UserDoesNotExistException(id);
 	      }
 	       return user;
 	  }

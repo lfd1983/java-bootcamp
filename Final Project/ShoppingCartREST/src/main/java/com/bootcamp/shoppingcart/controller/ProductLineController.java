@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bootcamp.shoppingcart.entity.Product;
 import com.bootcamp.shoppingcart.entity.ProductLine;
 import com.bootcamp.shoppingcart.entity.ShoppingCart;
+import com.bootcamp.shoppingcart.exceptions.ProductDoesNotExistException;
 import com.bootcamp.shoppingcart.repository.ProductLineRepository;
 import com.bootcamp.shoppingcart.repository.ProductRepository;
 import com.bootcamp.shoppingcart.repository.ShoppingCartRepository;
@@ -53,8 +54,11 @@ public class ProductLineController {
 	//update the product from the car
 	@RequestMapping(value = "users/{uId}/cart/{spId}/products/{plId}", method = RequestMethod.PUT,consumes=MediaType.APPLICATION_JSON_VALUE  )
 	@ResponseStatus( HttpStatus.CREATED )
-	public void update(@PathVariable long plId, @RequestBody ProductLine productLine ) {
+	public void update(@PathVariable long plId, @RequestBody ProductLine productLine ) throws ProductDoesNotExistException {
 		ProductLine productLine2 = productLineRepository.findById(plId);
+		if(productLine2 == null){
+		    	  throw new ProductDoesNotExistException();
+		      }
 		Product product = productRepository.findById((long) productLine.getProduct_id());
 		productLine = productLine2;
 		productLine.setSubTotal(productLine.getQuantity()*product.getPrice());
@@ -65,8 +69,11 @@ public class ProductLineController {
 	//get product using its id
 	@RequestMapping(value = "users/{uId}/cart/{spId}/products/{plId}", method = RequestMethod.GET )
 	@ResponseStatus( HttpStatus.OK )
-	public ProductLine getProductLine(@PathVariable long plId) {
-		  ProductLine productLine = productLineRepository.findById(plId);
+	public ProductLine getProductLine(@PathVariable long plId) throws ProductDoesNotExistException {
+		ProductLine productLine = productLineRepository.findById(plId);
+		   if(productLine == null){
+		    	  throw new ProductDoesNotExistException();
+		      }
 		  return productLine;
 	     }
 	
@@ -82,11 +89,10 @@ public class ProductLineController {
 	//delete a product from the cart
 		@RequestMapping(value = "users/{uId}/cart/{spId}/products/{plId}", method = RequestMethod.DELETE )
 		@ResponseStatus( HttpStatus.OK )
-		public void deletetProductLine(@PathVariable long plId) {
+		public void deletetProductLine(@PathVariable long plId) throws ProductDoesNotExistException {
 			ProductLine productLine = productLineRepository.findById(plId);
-			 
-			      if(productLine == null){
-			    	  throw new IllegalStateException("No product with id: " + plId);
+			   if(productLine == null){
+			    	  throw new ProductDoesNotExistException();
 			      }
 			productLineRepository.delete(productLine);
 		     }
