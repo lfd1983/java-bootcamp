@@ -1,0 +1,13 @@
+/target/
+
+
+.settings/
+
+.CLASSPATH
+
+.PROJECT
+
+/bin/
+
+/Scripts/
+.dbeaver-data-sources
