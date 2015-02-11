@@ -3,13 +3,14 @@
  */
 package com.bootcamp.shoppingcart.entity;
 
-import javax.persistence.CascadeType;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -40,11 +41,14 @@ public class Product {
 		@Column(name = "quantity")
 		@NotNull
 		private double quantity;
+		@OneToMany
+		@JoinColumn(name="product_id", referencedColumnName="id")
+		private List<ProductLine> productLine;
 		
-	
-		@ManyToOne(cascade = CascadeType.ALL)
-		@JoinColumn(name = "category_id")
-		private Category category;
+		/*@ManyToOne(cascade = CascadeType.ALL)
+		@JoinColumn(name = "category_id")*/
+		private int category_id;
+		/*private Category category;
 		public Category getCategory() {
 			return category;
 		}
@@ -53,7 +57,7 @@ public class Product {
 		public void setCategory(Category category) {
 			this.category = category;
 		}
-	
+	*/
 		public Product() {
 		}
 	
@@ -62,13 +66,13 @@ public class Product {
 		}
 		
 		public Product(String name, String description, double price,
-				double quantity, Category category) {
+				double quantity, int category_id) {
 			super();
 			this.name = name;
 			this.description = description;
 			this.price = price;
 			this.quantity = quantity;
-			this.category = category;
+			this.category_id = category_id;
 		}
 	
 	
@@ -119,6 +123,14 @@ public class Product {
 	
 		public void setQuantity(double quantity) {
 			this.quantity = quantity;
+		}
+
+		public int getCategory_id() {
+			return category_id;
+		}
+
+		public void setCategory_id(int category_id) {
+			this.category_id = category_id;
 		}
 	
 	

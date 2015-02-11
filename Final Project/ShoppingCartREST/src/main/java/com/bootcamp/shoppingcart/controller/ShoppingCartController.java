@@ -3,6 +3,10 @@
  */
 package com.bootcamp.shoppingcart.controller;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,15 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bootcamp.shoppingcart.entity.Product;
-import com.bootcamp.shoppingcart.entity.ProductLine;
 import com.bootcamp.shoppingcart.entity.ShoppingCart;
-import com.bootcamp.shoppingcart.repository.ProductLineRepository;
-import com.bootcamp.shoppingcart.repository.ProductRepository;
 import com.bootcamp.shoppingcart.repository.ShoppingCartRepository;
 
 /**
@@ -33,14 +32,16 @@ public class ShoppingCartController {
   
 	 @Autowired
 	 private ShoppingCartRepository shoppingCartRepository;
-	 private ProductLineRepository productLineRepository;
-	 private ProductRepository productRepository;
-  
 	 //create a ShoppingCart
 	 @RequestMapping(value ="{id}/cart", method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE  )
 	  @ResponseStatus( HttpStatus.CREATED )
-	   public void create(@RequestBody ShoppingCart shoppingCart) {
+	   public void create(@PathVariable String id, @RequestBody ShoppingCart shoppingCart) throws IOException {
 		  shoppingCartRepository.save(shoppingCart);
+		  
+		 /* HttpServletResponse response = null;
+		  response.setStatus(HttpServletResponse.SC_CREATED);
+		  response.setHeader("Location", id+"/cart/"+shoppingCart.getId().toString());
+		  System.out.println(response.toString());*/
 	     }
 	 
 	 
@@ -51,23 +52,17 @@ public class ShoppingCartController {
 	      return shoppingCart;
 	  }
 	 
-	 
-	 //get a shoppingcart with the passed id
-	   @RequestMapping(value ="{id}/cart/{scId}{pId}{quantity}",method = RequestMethod.POST)
-	   @ResponseStatus( HttpStatus.CREATED )
-	   public void addProductLineToShoppingCart(@PathVariable long id, @PathVariable int scId,
-			   @PathVariable long pId,@PathVariable int quantity) {
-		   Product product = productRepository.findById(pId);
-		   System.out.println(product);
-		   ProductLine productLine = new ProductLine();
-		   productLine.setProduct(product);
-		   productLine.setQuantity(quantity);
-		   productLine.setShoppingcart_id(scId);
-		   productLine.setSubTotal(quantity* productLine.getProduct().getPrice());
-		   productLineRepository.save(productLine);
+	   //delete a shopping cart 
+	   @RequestMapping( value = "{id}/cart/{scid}", method = RequestMethod.DELETE )
+	   @ResponseStatus( HttpStatus.OK )
+	   public void deleteCreditCard(@PathVariable long id,@PathVariable long scid) {
 		   
-	  }
-	 
+			  ShoppingCart shoppingCart = new ShoppingCart(id);
+			  shoppingCartRepository.delete(shoppingCart); 
+		  
+		  }
+			   
+
 	 
 	  
 

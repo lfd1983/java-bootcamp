@@ -3,10 +3,14 @@
  */
 package com.bootcamp.shoppingcart.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -31,6 +35,9 @@ public class Category {
 	@Column(name = "description")
 	@NotNull
 	private String description;
+	@OneToMany
+	@JoinColumn(name="product_id", referencedColumnName="id")
+	private List<Product> products;
 
 	
 	public Category() {

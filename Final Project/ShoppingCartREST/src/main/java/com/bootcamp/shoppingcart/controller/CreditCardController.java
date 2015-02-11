@@ -3,8 +3,6 @@
  */
 package com.bootcamp.shoppingcart.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,24 +29,14 @@ public class CreditCardController {
 	  private CreditCardRepository creditCardRepository;
 	  
 	 
-	//Get Credit Card By Id
+	  //Get Credit Card By Id
 	  @RequestMapping(value = "{idcc}", method = RequestMethod.GET)
 	  public CreditCard findByUserId(@PathVariable long idcc) {
 	   return creditCardRepository.findOne(idcc);
 	  }
 	  
 	  
-	//Get Credit all Credit Cards
-	  @RequestMapping(method = RequestMethod.GET)
-	  public List<CreditCard> findAllByUserId(@PathVariable long idusr) {
-	   return creditCardRepository.find(idusr);
-	  }
-	  
-	  
-	  /**
-	   * add a credit card to the user passing its id
-	   *  
-	   */
+	 //add a credit card to the user passing its
 	  
 	  @RequestMapping(method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE  )
 	  @ResponseStatus( HttpStatus.CREATED )
@@ -73,4 +61,15 @@ public class CreditCardController {
 	      creditCardRepository.save(creditCard);
 	      }
 	 
+	  
+	  //delete credit card
+	  @RequestMapping( value = "{idcc}", method = RequestMethod.DELETE )
+	  @ResponseStatus( HttpStatus.OK )
+	   public void deleteCreditCard(@PathVariable long idcc) {
+	   
+		  CreditCard creditCard = new CreditCard(idcc);
+		  creditCardRepository.delete(creditCard); 
+	  
+	  }
+	  
 }

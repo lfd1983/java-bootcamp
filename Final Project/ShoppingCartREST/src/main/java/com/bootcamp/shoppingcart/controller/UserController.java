@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bootcamp.shoppingcart.entity.CreditCard;
 import com.bootcamp.shoppingcart.entity.User;
-import com.bootcamp.shoppingcart.repository.CreditCardRepository;
 import com.bootcamp.shoppingcart.repository.UserRepository;
 
 /**
@@ -31,8 +30,6 @@ public class UserController {
 	  
 	  @Autowired
 	  private UserRepository userRepository;
-	  private CreditCardRepository creditCardRepository;
-	  
 	  /**
 	   * Create a user and save it in the database.
 	   * 
@@ -84,7 +81,11 @@ public class UserController {
 	  @RequestMapping(value ="{id}",method = RequestMethod.GET)
 	   public User getUserById(@PathVariable long id) {
 		  User user = userRepository.findById(id);
-	      return user;
+		  		  	      
+	      if(user == null){
+	    	  throw new IllegalStateException("No user with id: " + id);
+	      }
+	       return user;
 	  }
 	
 	  /**
@@ -99,30 +100,14 @@ public class UserController {
 	
 	
 	  
-	  /**
-	   * Delete the user the passed id.
-	   * 
-	   */
-	  @RequestMapping( value = "{id}/creditcards/{idcc}", method = RequestMethod.DELETE )
-	  @ResponseStatus( HttpStatus.OK )
-	   public void deleteCreditCard(@PathVariable long id,@PathVariable long idcc) {
-	   
-		  CreditCard creditCard = new CreditCard(id);
-		  creditCardRepository.delete(creditCard); 
 	  
+	//Get Credit all user´s Credit Cards
+	  @RequestMapping( value = "{id}/creditcards", method = RequestMethod.GET)
+	  public List<CreditCard> findAllByUserId(@PathVariable long id) {
+		  User user = userRepository.findById(id);
+		  return user.getCreditcard();
 	  }
-	
-	  
 	  
 	 
-	  /**
-	   * get all credit card´s user data
-	   *  
-	   *//*
-	  @RequestMapping(value ="{id}/creditcard", method = RequestMethod.GET)
-	   public List<CreditCard> getCreditCardUser(@PathVariable long id) {
-		  List<CreditCard> creditcard = shoppingCart.getUserCreditCards(id);
-	      return creditcard;
-	  }
-	*/
+	
 }

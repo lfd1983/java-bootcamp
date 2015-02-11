@@ -30,11 +30,6 @@ public class ShoppingCart {
 	@Column(name = "id")
 	private Long id;
 	
-/*	@OneToOne(cascade = CascadeType.ALL, mappedBy = "shoppingCart")
-	private Order order;*/
-	
-	/*@OneToMany(mappedBy = "shoppingCart")
-	private List<ProductLine> productLine;*/
 	
 	@OneToMany
 	@JoinColumn(name="shoppingcart_id", referencedColumnName="id")
@@ -44,20 +39,7 @@ public class ShoppingCart {
 	@Column(name="user_id")
 	public  int user_id;
 
-	
-/*	@NotNull
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id",referencedColumnName="id")	
-	private User user;
-	public User getUser() {
-		return user;
-	}
 
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-*/
 	public ShoppingCart() {
 	}
 
@@ -91,14 +73,7 @@ public class ShoppingCart {
 		this.productLine = productLine;
 	}
 
-	/*public Order getOrder() {
-		return order;
-	}
-
-	public void setOrder(Order order) {
-		this.order = order;
-	}*/
-
+	
 	public int getUser_id() {
 		return user_id;
 	}
