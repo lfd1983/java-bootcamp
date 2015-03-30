@@ -2,7 +2,7 @@
 
 Please, use this repository as a base for you training phase. The idea is to
 fork this project so everyone use the same folder structure for the
-exercises.
+exercises...
 
 It's extremelly important to keep the key points easy to be verified by
 the reviewers, so **don't mix the key points with the rest of the
